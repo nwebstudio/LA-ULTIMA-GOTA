@@ -180,18 +180,6 @@
   .oferta-precio .s{font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--oro);}
   .oferta-precio .monto{font-family:'Fraunces', serif; font-size:36px; color:var(--oro-claro); font-weight:600;}
 
-  /* barra de categorías (subnav tipo e-commerce) */
-  .cat-nav{
-    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
-    margin-bottom:48px; padding-bottom:2px;
-  }
-  .cat-nav a{
-    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase;
-    color:rgba(240,230,210,0.7); border:1px solid var(--linea); padding:9px 18px; border-radius:20px;
-    transition:border-color .25s, color .25s, background .25s;
-  }
-  .cat-nav a:hover{border-color:var(--oro); color:var(--oro-claro); background:rgba(192,138,52,0.08);}
-
   /* franja de marcas */
   .marcas-strip{
     border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
@@ -217,9 +205,16 @@
   .combo-card .info{padding:16px 16px 18px; display:flex; flex-direction:column; flex:1;}
   .combo-card .c-nombre{font-size:14px; color:var(--crema); line-height:1.4; margin-bottom:8px; min-height:38px;}
   .combo-card .c-precio{font-family:'IBM Plex Mono', monospace; font-size:17px; color:var(--oro-claro); font-weight:500; margin-bottom:14px;}
-  .combo-card .p-pedir{margin-top:auto;}
 
-  /* grid de productos por categoria */
+  .p-pedir{
+    margin-top:auto; display:block; text-align:center;
+    font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--oro);
+    border:1px solid var(--oro); padding:10px 14px; border-radius:2px; width:100%;
+    transition:background .25s, color .25s; box-sizing:border-box;
+  }
+  .p-pedir:hover{background:var(--oro); color:var(--negro);}
+
+  /* titulo de grupo dentro del catalogo */
   .cat-grupo{margin-bottom:64px;}
   .cat-grupo-titulo{
     display:flex; align-items:baseline; gap:16px; margin-bottom:24px;
@@ -228,35 +223,7 @@
   .cat-grupo-titulo h3{font-size:23px; color:var(--oro-claro);}
   .cat-grupo-titulo span{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:2px; color:var(--cobre); text-transform:uppercase;}
 
-  .producto-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;}
-  .producto-card{
-    background:var(--negro-2); border:1px solid var(--linea); padding:22px 18px 20px;
-    text-align:center; transition:border-color .3s, transform .3s;
-    display:flex; flex-direction:column; align-items:center;
-  }
-  .producto-card:hover{border-color:var(--oro); transform:translateY(-3px);}
-  .producto-card svg{width:54px; height:auto; margin-bottom:14px;}
-  .producto-card .p-nombre{font-size:13.5px; color:var(--crema); line-height:1.4; min-height:37px; margin-bottom:10px;}
-  .producto-card .p-precio{font-family:'IBM Plex Mono', monospace; font-size:16px; color:var(--oro-claro); font-weight:500; margin-bottom:14px;}
-  .producto-card .p-pedir{
-    font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--oro);
-    border:1px solid var(--oro); padding:8px 14px; border-radius:2px; width:100%;
-    transition:background .25s, color .25s;
-  }
-  .producto-card .p-pedir:hover{background:var(--oro); color:var(--negro);}
-
   .precios-nota{margin-top:8px; font-size:12px; color:var(--cobre); font-family:'IBM Plex Mono', monospace; text-align:center;}
-
-  /* catálogo */
-  .catalogo{display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--linea); border:1px solid var(--linea);}
-  .cat-item{
-    background:var(--negro-2); padding:40px 26px; text-align:center;
-    transition:background .3s;
-  }
-  .cat-item:hover{background:#241C15;}
-  .cat-item .num{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--vino); letter-spacing:2px;}
-  .cat-item h3{font-size:22px; margin:16px 0 10px; color:var(--oro-claro);}
-  .cat-item p{font-size:13.5px; color:rgba(240,230,210,0.6); line-height:1.6;}
 
   /* historia */
   .historia{display:grid; grid-template-columns:0.9fr 1.1fr; gap:70px; align-items:center;}
@@ -336,10 +303,7 @@
     .confianza .wrap{grid-template-columns:1fr; gap:14px; padding:22px;}
     .confianza-item{justify-content:flex-start;}
     .ofertas{grid-template-columns:1fr;}
-    .catalogo{grid-template-columns:repeat(2,1fr);}
-    .producto-grid{grid-template-columns:repeat(2,1fr);}
     .combos-grid{grid-template-columns:repeat(2,1fr);}
-    .cat-nav{justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; padding-bottom:10px; margin:0 -22px 40px; padding-left:22px; padding-right:22px;}
     footer .cols{grid-template-columns:1fr; gap:28px;}
     .info-grid{grid-template-columns:1fr;}
     .botella-wrap{order:-1; margin-bottom:20px;}
@@ -357,7 +321,7 @@
     <a href="#ofertas">Ofertas</a>
     <a href="#catalogo">Catálogo</a>
     <a href="#historia">Historia</a>
-    <a href="#visitanos">Visítanos</a>
+    <a href="#visitanos">Delivery</a>
     <a href="https://wa.me/51901983603" target="_blank" class="nav-cta">Pedir ahora</a>
   </nav>
 </header>
@@ -467,21 +431,10 @@
   <div class="wrap">
     <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
     <div class="titulo-seccion" data-reveal>
-      <p class="eyebrow">Lo que encontrarás</p>
+      <p class="eyebrow">Tienda 100% virtual</p>
       <h2>Nuestro catálogo</h2>
-      <p>Precios referenciales — escribe por WhatsApp para confirmar stock y coordinar tu entrega.</p>
+      <p>Combos listos para pedir. Precios referenciales — escribe por WhatsApp para confirmar stock y coordinar tu entrega.</p>
     </div>
-
-    <nav class="cat-nav" data-reveal="fade">
-      <a href="#g-combos">Combos</a>
-      <a href="#g-whiskies">Whiskies</a>
-      <a href="#g-rones">Rones</a>
-      <a href="#g-vodka">Vodka</a>
-      <a href="#g-piscos">Piscos</a>
-      <a href="#g-vinos">Vinos</a>
-      <a href="#g-cervezas">Cervezas</a>
-      <a href="#g-cremas">Licor de crema</a>
-    </nav>
 
     <div class="cat-grupo" id="g-combos" data-reveal>
       <div class="cat-grupo-titulo"><h3>Combos listos</h3><span>Botella + hielo + mixer, todo en un pedido</span></div>
@@ -569,126 +522,6 @@
       </div>
     </div>
 
-    <div class="cat-grupo" id="g-whiskies" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Whiskies</h3><span>Escoceses y blends</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
-          <p class="p-nombre">Johnnie Walker Red Label 750ml</p>
-          <p class="p-precio">S/ 58.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Johnnie%20Walker%20Red%20Label%20750ml%20(S%2F%2058.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
-          <p class="p-nombre">Old Parr 12 Años 750ml</p>
-          <p class="p-precio">S/ 85.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Old%20Parr%2012%20A%C3%B1os%20750ml%20(S%2F%2085.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
-          <p class="p-nombre">Chivas Regal 13 Años 700ml</p>
-          <p class="p-precio">S/ 160.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Chivas%20Regal%2013%20A%C3%B1os%20700ml%20(S%2F%20160.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-rones" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Rones</h3><span>Nacionales y del Caribe</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#8B5A2B" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#8B5A2B" opacity="0.5"/></svg>
-          <p class="p-nombre">Cartavio Black 750ml</p>
-          <p class="p-precio">S/ 27.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Cartavio%20Black%20750ml%20(S%2F%2027.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#8B5A2B" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#8B5A2B" opacity="0.5"/></svg>
-          <p class="p-nombre">Havana Club 7 Años 700ml</p>
-          <p class="p-precio">S/ 85.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Havana%20Club%207%20A%C3%B1os%20700ml%20(S%2F%2085.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-vodka" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Vodka</h3><span>Para cócteles y mezclas</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M24,4h12v14l6,6v58c0,4-3,6-6,6H24c-3,0-6-2-6-6V24l6-6Z" fill="none" stroke="#D9D0BC" stroke-width="2.4"/></svg>
-          <p class="p-nombre">Absolut 750ml</p>
-          <p class="p-precio">S/ 45.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Absolut%20750ml%20(S%2F%2045.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-piscos" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Piscos</h3><span>Tradición peruana</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M24,4h12v16l8,10v52c0,4-3,8-8,8H24c-5,0-8-4-8-8V30l8-10Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><path d="M16,52h28v20c0,4-3,8-8,8H24c-5,0-8-4-8-8Z" fill="#6B1E23" opacity="0.5"/></svg>
-          <p class="p-nombre">Queirolo Quebranta 750ml</p>
-          <p class="p-precio">S/ 28.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Pisco%20Queirolo%20Quebranta%20750ml%20(S%2F%2028.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M24,4h12v16l8,10v52c0,4-3,8-8,8H24c-5,0-8-4-8-8V30l8-10Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><path d="M16,52h28v20c0,4-3,8-8,8H24c-5,0-8-4-8-8Z" fill="#6B1E23" opacity="0.5"/></svg>
-          <p class="p-nombre">Queirolo Acholado 750ml</p>
-          <p class="p-precio">S/ 27.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Pisco%20Queirolo%20Acholado%20750ml%20(S%2F%2027.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-vinos" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Vinos</h3><span>Nacionales</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#6B1E23" opacity="0.5"/></svg>
-          <p class="p-nombre">Tabernero Borgoña 750ml</p>
-          <p class="p-precio">S/ 17.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vino%20Tabernero%20Borgo%C3%B1a%20750ml%20(S%2F%2017.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-cervezas" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Cervezas</h3><span>Six packs</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
-          <p class="p-nombre">Cusqueña Dorada Six Pack 310ml</p>
-          <p class="p-precio">S/ 30.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Cusque%C3%B1a%20Dorada%20Six%20Pack%20310ml%20(S%2F%2030.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
-          <p class="p-nombre">Corona Six Pack 355ml</p>
-          <p class="p-precio">S/ 34.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Corona%20Six%20Pack%20355ml%20(S%2F%2034.00)" target="_blank">Pedir</a>
-        </div>
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
-          <p class="p-nombre">Heineken Six Pack 330ml</p>
-          <p class="p-precio">S/ 30.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Heineken%20Six%20Pack%20330ml%20(S%2F%2030.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
-    <div class="cat-grupo" id="g-cremas" data-reveal>
-      <div class="cat-grupo-titulo"><h3>Licor de crema</h3><span>Para disfrutar solo o en postres</span></div>
-      <div class="producto-grid">
-        <div class="producto-card">
-          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#F0E6D2" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#F0E6D2" opacity="0.4"/></svg>
-          <p class="p-nombre">Baileys Original 750ml</p>
-          <p class="p-precio">S/ 65.00</p>
-          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Baileys%20Original%20750ml%20(S%2F%2065.00)" target="_blank">Pedir</a>
-        </div>
-      </div>
-    </div>
-
     <p class="precios-nota">Precios referenciales de mercado, sujetos a variación. Consulta stock disponible por WhatsApp.</p>
   </div>
 </section>
@@ -714,23 +547,23 @@
   <div class="wrap">
     <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
     <div class="titulo-seccion" data-reveal>
-      <p class="eyebrow">Información</p>
-      <h2>Visítanos</h2>
+      <p class="eyebrow">Tienda 100% virtual</p>
+      <h2>Delivery en toda Lima</h2>
+      <p>No tenemos local físico — pedimos, empacamos y te lo llevamos. Todo se coordina por WhatsApp.</p>
     </div>
     <div class="info-grid" data-reveal>
       <div class="info-card">
-        <span class="eyebrow">Horario</span>
+        <span class="eyebrow">Horario de pedidos</span>
         <p><b>Lunes a sábado</b><br>11:00 a.m. – 11:00 p.m.</p>
         <p style="margin-top:10px;"><b>Domingo</b><br>12:00 p.m. – 9:00 p.m.</p>
       </div>
       <div class="info-card">
-        <span class="eyebrow">Ubicación</span>
-        <p>Lima, Perú<br>Actualizaremos la dirección exacta muy pronto.</p>
-        <a class="mini-btn" href="https://maps.google.com/?q=Lima,Peru" target="_blank">Cómo llegar →</a>
+        <span class="eyebrow">Cobertura</span>
+        <p>Delivery a todo Lima.<br>Entrega el mismo día, coordinada por WhatsApp.</p>
       </div>
       <div class="info-card">
         <span class="eyebrow">Pedidos</span>
-        <p>Delivery y encargos por WhatsApp.<br><b>901 983 603</b></p>
+        <p>Escríbenos y armamos tu pedido.<br><b>901 983 603</b></p>
         <a class="mini-btn" href="https://wa.me/51901983603" target="_blank">Escribir ahora →</a>
       </div>
     </div>
@@ -742,14 +575,14 @@
     <div class="cols">
       <div class="col">
         <h5>La Última Gota</h5>
-        <p style="max-width:280px; line-height:1.8;">Licorería en Lima, Perú. Piscos, vinos, whiskies y cervezas seleccionados con cuidado, con delivery el mismo día.</p>
+        <p style="max-width:280px; line-height:1.8;">Licorería 100% virtual en Lima, Perú. Piscos, vinos, whiskies y cervezas seleccionados con cuidado, con delivery el mismo día.</p>
       </div>
       <div class="col">
         <h5>Navegación</h5>
         <a href="#ofertas">Ofertas</a>
         <a href="#catalogo">Catálogo</a>
         <a href="#historia">Historia</a>
-        <a href="#visitanos">Visítanos</a>
+        <a href="#visitanos">Delivery</a>
       </div>
       <div class="col">
         <h5>Contacto</h5>
