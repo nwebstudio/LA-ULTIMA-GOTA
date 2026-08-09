@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>La Última Gota — Licorería</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --negro:#100C09;
+    --negro-2:#1C1611;
+    --crema:#F0E6D2;
+    --oro:#C08A34;
+    --oro-claro:#E3B04B;
+    --vino:#6B1E23;
+    --cobre:#8B5A2B;
+    --linea: rgba(240,230,210,0.12);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--negro);
+    color:var(--crema);
+    font-family:'Work Sans', sans-serif;
+    font-weight:300;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; letter-spacing:0.3px;}
+  .eyebrow{font-family:'IBM Plex Mono', monospace; letter-spacing:3px; text-transform:uppercase; font-size:12px; color:var(--oro);}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1120px; margin:0 auto; padding:0 32px;}
+  ::selection{background:var(--oro); color:var(--negro);}
+
+  /* la gota — motivo de la marca, usada como separador */
+  .gota{
+    display:inline-block;
+    width:9px; height:12px;
+    background:var(--oro);
+    border-radius:0 60% 60% 60%;
+    transform:rotate(45deg);
+    margin:0 10px;
+    vertical-align:middle;
+  }
+
+  /* animación de aparición al hacer scroll */
+  [data-reveal]{opacity:0; transform:translateY(22px); transition:opacity .7s ease, transform .7s ease;}
+  [data-reveal].visible{opacity:1; transform:translateY(0);}
+  [data-reveal="fade"]{transform:none;}
+
+  /* header */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:60;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 40px;
+    background:linear-gradient(to bottom, rgba(16,12,9,0.92), transparent);
+    backdrop-filter:blur(2px);
+  }
+  .marca{font-family:'Fraunces', serif; font-size:20px; letter-spacing:1px; color:var(--crema); display:flex; align-items:center; gap:12px;}
+  .marca b{color:var(--oro); font-weight:600;}
+  .marca img{height:38px; width:auto; flex-shrink:0;}
+  nav{display:flex; align-items:center; gap:36px; font-size:13px; letter-spacing:1.5px; text-transform:uppercase;}
+  nav a{opacity:0.85; transition:opacity .25s, color .25s;}
+  nav a:hover{opacity:1; color:var(--oro-claro);}
+  .nav-cta{
+    padding:10px 20px; border:1px solid var(--oro); border-radius:2px; opacity:1 !important;
+    color:var(--oro-claro) !important;
+  }
+  .nav-cta:hover{background:rgba(192,138,52,0.12);}
+
+  .hamburguesa{
+    display:none; flex-direction:column; gap:5px; background:none; border:none; cursor:pointer; padding:6px; z-index:70;
+  }
+  .hamburguesa span{width:24px; height:2px; background:var(--crema); display:block; transition:transform .25s, opacity .25s;}
+  .hamburguesa.abierto span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .hamburguesa.abierto span:nth-child(2){opacity:0;}
+  .hamburguesa.abierto span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+  /* hero */
+  .hero{
+    min-height:100vh;
+    display:flex; align-items:center;
+    position:relative;
+    background:
+      radial-gradient(ellipse at 70% 20%, rgba(107,30,35,0.35), transparent 55%),
+      radial-gradient(ellipse at 20% 80%, rgba(192,138,52,0.12), transparent 50%),
+      var(--negro);
+  }
+  .hero .wrap{display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:center; padding-top:90px;}
+  .hero h1{
+    font-size:clamp(48px, 7vw, 88px);
+    line-height:0.98;
+    color:var(--crema);
+  }
+  .hero h1 em{font-style:italic; color:var(--oro-claro);}
+  .hero p.lead{
+    margin-top:26px; max-width:440px;
+    font-size:17px; line-height:1.7; color:rgba(240,230,210,0.75);
+  }
+  .cta-row{margin-top:38px; display:flex; gap:18px; align-items:center; flex-wrap:wrap;}
+  .btn{
+    padding:15px 30px; font-size:13px; letter-spacing:2px; text-transform:uppercase;
+    border:1px solid var(--oro); border-radius:2px;
+    transition:background .25s, color .25s, transform .25s;
+    display:inline-block;
+  }
+  .btn.solid{background:var(--oro); color:var(--negro); font-weight:500;}
+  .btn.solid:hover{background:var(--oro-claro); transform:translateY(-2px);}
+  .btn.ghost:hover{background:rgba(192,138,52,0.12); transform:translateY(-2px);}
+
+  /* ilustración del hero (propia, independiente del logo) */
+  .botella-wrap{display:flex; justify-content:center; position:relative;}
+  .botella-wrap svg{width:min(300px, 78%); height:auto; filter:drop-shadow(0 30px 50px rgba(0,0,0,0.6));}
+  @keyframes caer{
+    0%{ transform:translateY(0); opacity:0; }
+    15%{ opacity:1; }
+    70%{ transform:translateY(190px); opacity:1;}
+    78%{ transform:translateY(196px); opacity:0;}
+    100%{ transform:translateY(196px); opacity:0;}
+  }
+  @keyframes ondas{
+    0%,72%{ opacity:0; r:2;}
+    80%{opacity:0.6; r:6;}
+    100%{opacity:0; r:22;}
+  }
+  .gota-anim{animation:caer 3.4s cubic-bezier(.6,0,.4,1) infinite;}
+  .onda{animation:ondas 3.4s cubic-bezier(.6,0,.4,1) infinite;}
+
+  .scroll-hint{
+    position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:3px;
+    color:var(--cobre); text-transform:uppercase;
+  }
+
+  /* franja de confianza */
+  .confianza{
+    border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
+    background:var(--negro-2);
+  }
+  .confianza .wrap{
+    display:grid; grid-template-columns:repeat(3,1fr);
+    padding:26px 32px;
+  }
+  .confianza-item{
+    display:flex; align-items:center; gap:14px; justify-content:center;
+    font-size:13px; letter-spacing:0.5px; color:rgba(240,230,210,0.85);
+    padding:6px 14px; text-align:left;
+  }
+  .confianza-item svg{width:26px; height:26px; flex-shrink:0; color:var(--oro);}
+  .confianza-item b{display:block; color:var(--crema); font-family:'Fraunces', serif; font-size:14.5px; font-weight:600;}
+
+  /* separador de sección */
+  .divisor{
+    display:flex; align-items:center; justify-content:center;
+    padding:70px 0 10px; color:var(--cobre);
+  }
+  .divisor .linea{flex:1; height:1px; background:var(--linea); max-width:180px;}
+
+  section{padding:40px 0 100px;}
+  .titulo-seccion{text-align:center; margin-bottom:56px;}
+  .titulo-seccion h2{font-size:clamp(30px,4vw,44px); margin-top:14px;}
+  .titulo-seccion p{color:var(--cobre); margin-top:14px; max-width:520px; margin-left:auto; margin-right:auto; font-size:15px;}
+
+  /* ofertas */
+  .ofertas{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
+  .oferta-card{
+    position:relative; border:1px solid var(--linea); padding:34px 28px 30px;
+    background:linear-gradient(160deg, rgba(107,30,35,0.14), var(--negro-2));
+    transition:border-color .3s, transform .3s;
+  }
+  .oferta-card:hover{border-color:var(--oro); transform:translateY(-4px);}
+  .oferta-tag{
+    position:absolute; top:-14px; right:24px;
+    background:var(--oro); color:var(--negro); font-family:'IBM Plex Mono', monospace;
+    font-size:11px; font-weight:500; letter-spacing:1.5px; padding:6px 12px; border-radius:2px;
+  }
+  .oferta-card h3{font-size:21px; color:var(--crema); margin-bottom:10px; padding-right:40px;}
+  .oferta-card p.desc{font-size:13.5px; color:rgba(240,230,210,0.65); line-height:1.6; margin-bottom:20px;}
+  .oferta-precio{display:flex; align-items:baseline; gap:8px;}
+  .oferta-precio .s{font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--oro);}
+  .oferta-precio .monto{font-family:'Fraunces', serif; font-size:36px; color:var(--oro-claro); font-weight:600;}
+
+  /* barra de categorías (subnav tipo e-commerce) */
+  .cat-nav{
+    display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+    margin-bottom:48px; padding-bottom:2px;
+  }
+  .cat-nav a{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:1.5px; text-transform:uppercase;
+    color:rgba(240,230,210,0.7); border:1px solid var(--linea); padding:9px 18px; border-radius:20px;
+    transition:border-color .25s, color .25s, background .25s;
+  }
+  .cat-nav a:hover{border-color:var(--oro); color:var(--oro-claro); background:rgba(192,138,52,0.08);}
+
+  /* franja de marcas */
+  .marcas-strip{
+    border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
+    padding:22px 0; overflow:hidden; background:var(--negro-2);
+  }
+  .marcas-track{
+    display:flex; gap:52px; white-space:nowrap; font-family:'Fraunces', serif; font-style:italic;
+    font-size:16px; color:rgba(240,230,210,0.4); letter-spacing:0.5px;
+    animation:desfile 32s linear infinite;
+  }
+  @keyframes desfile{ 0%{transform:translateX(0);} 100%{transform:translateX(-50%);} }
+
+  /* combos con fotos reales */
+  .combos-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:20px;}
+  .combo-card{
+    background:var(--negro-2); border:1px solid var(--linea); overflow:hidden;
+    transition:border-color .3s, transform .3s;
+    display:flex; flex-direction:column;
+  }
+  .combo-card:hover{border-color:var(--oro); transform:translateY(-4px);}
+  .combo-card .foto{width:100%; aspect-ratio:1/1; overflow:hidden; background:#000;}
+  .combo-card .foto img{width:100%; height:100%; object-fit:cover; display:block;}
+  .combo-card .info{padding:16px 16px 18px; display:flex; flex-direction:column; flex:1;}
+  .combo-card .c-nombre{font-size:14px; color:var(--crema); line-height:1.4; margin-bottom:8px; min-height:38px;}
+  .combo-card .c-precio{font-family:'IBM Plex Mono', monospace; font-size:17px; color:var(--oro-claro); font-weight:500; margin-bottom:14px;}
+  .combo-card .p-pedir{margin-top:auto;}
+
+  /* grid de productos por categoria */
+  .cat-grupo{margin-bottom:64px;}
+  .cat-grupo-titulo{
+    display:flex; align-items:baseline; gap:16px; margin-bottom:24px;
+    border-bottom:1px solid var(--linea); padding-bottom:14px;
+  }
+  .cat-grupo-titulo h3{font-size:23px; color:var(--oro-claro);}
+  .cat-grupo-titulo span{font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:2px; color:var(--cobre); text-transform:uppercase;}
+
+  .producto-grid{display:grid; grid-template-columns:repeat(4, 1fr); gap:18px;}
+  .producto-card{
+    background:var(--negro-2); border:1px solid var(--linea); padding:22px 18px 20px;
+    text-align:center; transition:border-color .3s, transform .3s;
+    display:flex; flex-direction:column; align-items:center;
+  }
+  .producto-card:hover{border-color:var(--oro); transform:translateY(-3px);}
+  .producto-card svg{width:54px; height:auto; margin-bottom:14px;}
+  .producto-card .p-nombre{font-size:13.5px; color:var(--crema); line-height:1.4; min-height:37px; margin-bottom:10px;}
+  .producto-card .p-precio{font-family:'IBM Plex Mono', monospace; font-size:16px; color:var(--oro-claro); font-weight:500; margin-bottom:14px;}
+  .producto-card .p-pedir{
+    font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--oro);
+    border:1px solid var(--oro); padding:8px 14px; border-radius:2px; width:100%;
+    transition:background .25s, color .25s;
+  }
+  .producto-card .p-pedir:hover{background:var(--oro); color:var(--negro);}
+
+  .precios-nota{margin-top:8px; font-size:12px; color:var(--cobre); font-family:'IBM Plex Mono', monospace; text-align:center;}
+
+  /* catálogo */
+  .catalogo{display:grid; grid-template-columns:repeat(4, 1fr); gap:1px; background:var(--linea); border:1px solid var(--linea);}
+  .cat-item{
+    background:var(--negro-2); padding:40px 26px; text-align:center;
+    transition:background .3s;
+  }
+  .cat-item:hover{background:#241C15;}
+  .cat-item .num{font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--vino); letter-spacing:2px;}
+  .cat-item h3{font-size:22px; margin:16px 0 10px; color:var(--oro-claro);}
+  .cat-item p{font-size:13.5px; color:rgba(240,230,210,0.6); line-height:1.6;}
+
+  /* historia */
+  .historia{display:grid; grid-template-columns:0.9fr 1.1fr; gap:70px; align-items:center;}
+  .historia .marco{
+    border:1px solid var(--linea); padding:40px; position:relative;
+    background:linear-gradient(160deg, rgba(107,30,35,0.12), transparent);
+  }
+  .historia .marco::before{
+    content:""; position:absolute; top:-1px; left:-1px; width:34px; height:34px;
+    border-top:2px solid var(--oro); border-left:2px solid var(--oro);
+  }
+  .historia .marco::after{
+    content:""; position:absolute; bottom:-1px; right:-1px; width:34px; height:34px;
+    border-bottom:2px solid var(--oro); border-right:2px solid var(--oro);
+  }
+  .historia blockquote{font-family:'Fraunces', serif; font-style:italic; font-size:22px; line-height:1.55; color:var(--crema);}
+  .historia cite{display:block; margin-top:20px; font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--oro); font-style:normal; letter-spacing:1.5px;}
+  .historia p{font-size:16px; line-height:1.85; color:rgba(240,230,210,0.75); margin-bottom:18px;}
+
+  /* horario / ubicacion */
+  .info-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--linea); border:1px solid var(--linea);}
+  .info-card{background:var(--negro-2); padding:38px;}
+  .info-card .eyebrow{margin-bottom:16px; display:block;}
+  .info-card p{font-size:15px; line-height:1.9; color:rgba(240,230,210,0.8);}
+  .info-card p b{color:var(--crema); font-weight:500;}
+  .info-card .mini-btn{
+    display:inline-block; margin-top:16px; font-size:12px; letter-spacing:1.5px; text-transform:uppercase;
+    color:var(--oro-claro); border-bottom:1px solid var(--oro); padding-bottom:2px;
+  }
+
+  footer{
+    border-top:1px solid var(--linea); padding:60px 0 30px;
+  }
+  footer .cols{
+    display:grid; grid-template-columns:1.3fr 1fr 1fr; gap:40px;
+    padding-bottom:40px; border-bottom:1px solid var(--linea);
+  }
+  footer .col h5{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    color:var(--oro); margin-bottom:16px;
+  }
+  footer .col p, footer .col a{
+    display:block; font-size:13.5px; color:rgba(240,230,210,0.7); line-height:2;
+  }
+  footer .col a:hover{color:var(--oro-claro);}
+  footer .bottom{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px;
+    padding-top:24px;
+  }
+  footer .marca{font-size:16px;}
+  footer .marca img{height:30px;}
+  footer .legal{font-size:11.5px; color:var(--cobre); font-family:'IBM Plex Mono', monospace;}
+
+  /* boton flotante de whatsapp */
+  .wa-flotante{
+    position:fixed; bottom:26px; right:26px; z-index:80;
+    width:58px; height:58px; border-radius:50%;
+    background:var(--oro); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.55);
+    transition:transform .25s, background .25s;
+  }
+  .wa-flotante:hover{transform:scale(1.08); background:var(--oro-claro);}
+  .wa-flotante svg{width:28px; height:28px; color:var(--negro);}
+
+  @media (max-width: 860px){
+    header{padding:16px 22px;}
+    nav{
+      position:fixed; top:0; right:0; height:100vh; width:min(78vw, 320px);
+      background:var(--negro-2); flex-direction:column; align-items:flex-start;
+      justify-content:center; gap:30px; padding:40px; font-size:15px;
+      transform:translateX(100%); transition:transform .35s ease;
+      box-shadow:-10px 0 40px rgba(0,0,0,0.5);
+    }
+    nav.abierto{transform:translateX(0);}
+    .hamburguesa{display:flex;}
+    .hero .wrap, .historia{grid-template-columns:1fr;}
+    .confianza .wrap{grid-template-columns:1fr; gap:14px; padding:22px;}
+    .confianza-item{justify-content:flex-start;}
+    .ofertas{grid-template-columns:1fr;}
+    .catalogo{grid-template-columns:repeat(2,1fr);}
+    .producto-grid{grid-template-columns:repeat(2,1fr);}
+    .combos-grid{grid-template-columns:repeat(2,1fr);}
+    .cat-nav{justify-content:flex-start; overflow-x:auto; flex-wrap:nowrap; padding-bottom:10px; margin:0 -22px 40px; padding-left:22px; padding-right:22px;}
+    footer .cols{grid-template-columns:1fr; gap:28px;}
+    .info-grid{grid-template-columns:1fr;}
+    .botella-wrap{order:-1; margin-bottom:20px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="marca">
+    <img src="logo-la-ultima-gota.png" alt="La Última Gota">
+  </div>
+  <button class="hamburguesa" id="btnMenu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  <nav id="navMenu">
+    <a href="#ofertas">Ofertas</a>
+    <a href="#catalogo">Catálogo</a>
+    <a href="#historia">Historia</a>
+    <a href="#visitanos">Visítanos</a>
+    <a href="https://wa.me/51901983603" target="_blank" class="nav-cta">Pedir ahora</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <p class="eyebrow">Licorería · Lima, Perú</p>
+      <h1>Cada botella<br>guarda <em>una</em><br>última gota.</h1>
+      <p class="lead">Piscos, vinos, whiskies y cervezas artesanales seleccionados con cuidado. Un lugar donde cada etiqueta tiene una historia que contar antes de llegar a tu mesa.</p>
+      <div class="cta-row">
+        <a href="https://wa.me/51901983603" target="_blank" class="btn solid">Pedir por WhatsApp</a>
+        <a href="#catalogo" class="btn ghost">Ver catálogo</a>
+      </div>
+    </div>
+
+    <div class="botella-wrap">
+      <svg viewBox="0 0 300 340" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="goldh" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#E3B04B"/>
+            <stop offset="100%" stop-color="#8B5A2B"/>
+          </linearGradient>
+        </defs>
+        <circle cx="150" cy="180" r="128" fill="none" stroke="url(#goldh)" stroke-width="4" stroke-linecap="round" stroke-dasharray="470 340" transform="rotate(-100 150 180)" opacity="0.9"/>
+        <g transform="translate(96,60)">
+          <rect x="-9" y="-30" width="18" height="26" rx="2" fill="none" stroke="url(#goldh)" stroke-width="3.5"/>
+          <path d="M -9,-4 C -9,8 -24,14 -24,34 L -24,104 C -24,118 -12,128 0,128 C 12,128 24,118 24,104 L 24,34
+                   C 24,14 9,8 9,-4 Z" fill="none" stroke="url(#goldh)" stroke-width="3.5"/>
+        </g>
+        <g transform="translate(176,150)">
+          <path d="M -42,-50 L -34,54 C -34,66 34,66 34,54 L 42,-50 Z" fill="none" stroke="url(#goldh)" stroke-width="3.8"/>
+          <path d="M -37,6 C -18,-8 18,-8 37,6 L 32,52 C 32,62 -32,62 -32,52 Z" fill="#8B5A2B" opacity="0.4"/>
+          <rect x="-20" y="-12" width="20" height="20" rx="3" fill="none" stroke="#F0E6D2" stroke-width="2" transform="rotate(10)" opacity="0.85"/>
+          <rect x="4" y="0" width="17" height="17" rx="3" fill="none" stroke="#F0E6D2" stroke-width="2" transform="rotate(-7)" opacity="0.85"/>
+        </g>
+        <path class="gota-anim" d="M 176,-6 C 187,9 197,20 197,31 C 197,42.5 187.7,51 176,51 C 164.3,51 155,42.5 155,31 C 155,20 165,9 176,-6 Z" fill="url(#goldh)"/>
+        <circle class="onda" cx="176" cy="196" r="2" fill="none" stroke="#E3B04B" stroke-width="1.5"/>
+      </svg>
+    </div>
+  </div>
+  <div class="scroll-hint">Desliza <span class="gota"></span> descubre</div>
+</section>
+
+<div class="confianza">
+  <div class="wrap">
+    <div class="confianza-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M9 12l2 2 4-4"/><circle cx="12" cy="12" r="9"/></svg>
+      <span><b>100% originales</b>Productos con procedencia verificada</span>
+    </div>
+    <div class="confianza-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 21h18M6 21V9l6-5 6 5v12M10 21v-6h4v6"/></svg>
+      <span><b>Las mejores marcas</b>Selección cuidada botella por botella</span>
+    </div>
+    <div class="confianza-item">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7z"/><circle cx="7.5" cy="18.5" r="1.6"/><circle cx="17.5" cy="18.5" r="1.6"/></svg>
+      <span><b>Entregas rápidas</b>Delivery el mismo día en Lima</span>
+    </div>
+  </div>
+</div>
+
+<section id="ofertas">
+  <div class="wrap">
+    <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
+    <div class="titulo-seccion" data-reveal>
+      <p class="eyebrow">Este mes</p>
+      <h2>Ofertas destacadas</h2>
+      <p>Combos pensados para compartir, con precio especial por tiempo limitado.</p>
+    </div>
+    <div class="ofertas">
+      <div class="oferta-card" data-reveal>
+        <span class="oferta-tag">Oferta</span>
+        <h3>Combo Ron + Gaseosa + Hielo</h3>
+        <p class="desc">Ron añejo, gaseosa de 3L y bolsa de hielo de 15kg. Todo listo para la reunión.</p>
+        <div class="oferta-precio"><span class="s">S/</span><span class="monto">60</span></div>
+      </div>
+      <div class="oferta-card" data-reveal>
+        <span class="oferta-tag">Oferta</span>
+        <h3>Pack Cervezas Artesanales x6</h3>
+        <p class="desc">Selección mixta de cervezas artesanales locales, siempre frías al recogerlas.</p>
+        <div class="oferta-precio"><span class="s">S/</span><span class="monto">45</span></div>
+      </div>
+      <div class="oferta-card" data-reveal>
+        <span class="oferta-tag">Oferta</span>
+        <h3>Pisco + Limón + Ice</h3>
+        <p class="desc">Pisco quebranta, limones frescos y hielo. Lo esencial para un buen pisco sour.</p>
+        <div class="oferta-precio"><span class="s">S/</span><span class="monto">50</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="marcas-strip">
+  <div class="marcas-track">
+    <span>Johnnie Walker</span><span>·</span><span>Old Parr</span><span>·</span><span>Chivas Regal</span><span>·</span>
+    <span>Absolut</span><span>·</span><span>Baileys</span><span>·</span><span>Cartavio</span><span>·</span>
+    <span>Havana Club</span><span>·</span><span>Queirolo</span><span>·</span><span>Tabernero</span><span>·</span>
+    <span>Cusqueña</span><span>·</span><span>Corona</span><span>·</span><span>Heineken</span><span>·</span>
+    <span>Johnnie Walker</span><span>·</span><span>Old Parr</span><span>·</span><span>Chivas Regal</span><span>·</span>
+    <span>Absolut</span><span>·</span><span>Baileys</span><span>·</span><span>Cartavio</span><span>·</span>
+    <span>Havana Club</span><span>·</span><span>Queirolo</span><span>·</span><span>Tabernero</span><span>·</span>
+    <span>Cusqueña</span><span>·</span><span>Corona</span><span>·</span><span>Heineken</span><span>·</span>
+  </div>
+</div>
+
+<section id="catalogo">
+  <div class="wrap">
+    <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
+    <div class="titulo-seccion" data-reveal>
+      <p class="eyebrow">Lo que encontrarás</p>
+      <h2>Nuestro catálogo</h2>
+      <p>Precios referenciales — escribe por WhatsApp para confirmar stock y coordinar tu entrega.</p>
+    </div>
+
+    <nav class="cat-nav" data-reveal="fade">
+      <a href="#g-combos">Combos</a>
+      <a href="#g-whiskies">Whiskies</a>
+      <a href="#g-rones">Rones</a>
+      <a href="#g-vodka">Vodka</a>
+      <a href="#g-piscos">Piscos</a>
+      <a href="#g-vinos">Vinos</a>
+      <a href="#g-cervezas">Cervezas</a>
+      <a href="#g-cremas">Licor de crema</a>
+    </nav>
+
+    <div class="cat-grupo" id="g-combos" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Combos listos</h3><span>Botella + hielo + mixer, todo en un pedido</span></div>
+      <div class="combos-grid">
+        <div class="combo-card">
+          <div class="foto"><img src="combo-johnnie-walker-red.jpg" alt="Combo Johnnie Walker Red Label con hielo y Coca-Cola"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Johnnie Walker Red Label + Hielo + Coca-Cola</p>
+            <p class="c-precio">S/ 92.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Johnnie%20Walker%20Red%20Label%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2092.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-chivas-regal-12.jpg" alt="Combo Chivas Regal 12 años con hielo y Coca-Cola"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Chivas Regal 12 Años + Hielo + Coca-Cola</p>
+            <p class="c-precio">S/ 178.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Chivas%20Regal%2012%20A%C3%B1os%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%20178.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-cartavio-black.jpg" alt="Combo Ron Cartavio Black con hielo y Coca-Cola"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Ron Cartavio Black + Hielo + Coca-Cola</p>
+            <p class="c-precio">S/ 62.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Ron%20Cartavio%20Black%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2062.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-flor-de-cana.jpg" alt="Combo Ron Flor de Caña Oro Reserva con hielo y Coca-Cola"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Flor de Caña Oro Reserva + Hielo + Coca-Cola</p>
+            <p class="c-precio">S/ 94.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Flor%20de%20Ca%C3%B1a%20Oro%20Reserva%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2094.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-smirnoff-greenapple.jpg" alt="Combo Vodka Smirnoff Green Apple con hielo y Coca-Cola"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Smirnoff Green Apple + Hielo + Coca-Cola</p>
+            <p class="c-precio">S/ 75.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Smirnoff%20Green%20Apple%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2075.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-pisco-acholado-evervess.jpg" alt="Combo Pisco Queirolo Acholado con hielo y Evervess"></div>
+          <div class="info">
+            <p class="c-nombre">Combo Pisco Queirolo Acholado + Hielo + Evervess</p>
+            <p class="c-precio">S/ 62.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Pisco%20Queirolo%20Acholado%20%2B%20Hielo%20%2B%20Evervess%20(S%2F%2062.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-tabernero-rose.jpg" alt="Vino Tabernero Gran Rosé Afrutado"></div>
+          <div class="info">
+            <p class="c-nombre">Vino Tabernero Gran Rosé Afrutado 750ml</p>
+            <p class="c-precio">S/ 20.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vino%20Tabernero%20Gran%20Ros%C3%A9%20Afrutado%20750ml%20(S%2F%2020.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-pilsen-callao.jpg" alt="Six pack Pilsen Callao lata 269ml"></div>
+          <div class="info">
+            <p class="c-nombre">Six Pack Pilsen Callao Lata 269ml</p>
+            <p class="c-precio">S/ 22.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Pilsen%20Callao%20269ml%20(S%2F%2022.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-mikes-mango-hot.jpg" alt="Six pack Mike's Mango Hot edición limitada"></div>
+          <div class="info">
+            <p class="c-nombre">Six Pack Mike's Mango Hot (Edición Limitada)</p>
+            <p class="c-precio">S/ 35.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Mike's%20Mango%20Hot%20(S%2F%2035.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="combo-mikes-strawberry.jpg" alt="Six pack Mike's Hard Strawberry Lemonade"></div>
+          <div class="info">
+            <p class="c-nombre">Six Pack Mike's Hard Strawberry Lemonade</p>
+            <p class="c-precio">S/ 35.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Mike's%20Hard%20Strawberry%20Lemonade%20(S%2F%2035.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-whiskies" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Whiskies</h3><span>Escoceses y blends</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
+          <p class="p-nombre">Johnnie Walker Red Label 750ml</p>
+          <p class="p-precio">S/ 58.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Johnnie%20Walker%20Red%20Label%20750ml%20(S%2F%2058.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
+          <p class="p-nombre">Old Parr 12 Años 750ml</p>
+          <p class="p-precio">S/ 85.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Old%20Parr%2012%20A%C3%B1os%20750ml%20(S%2F%2085.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#C08A34" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#C08A34" opacity="0.5"/></svg>
+          <p class="p-nombre">Chivas Regal 13 Años 700ml</p>
+          <p class="p-precio">S/ 160.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Chivas%20Regal%2013%20A%C3%B1os%20700ml%20(S%2F%20160.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-rones" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Rones</h3><span>Nacionales y del Caribe</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#8B5A2B" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#8B5A2B" opacity="0.5"/></svg>
+          <p class="p-nombre">Cartavio Black 750ml</p>
+          <p class="p-precio">S/ 27.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Cartavio%20Black%20750ml%20(S%2F%2027.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#8B5A2B" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#8B5A2B" opacity="0.5"/></svg>
+          <p class="p-nombre">Havana Club 7 Años 700ml</p>
+          <p class="p-precio">S/ 85.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Havana%20Club%207%20A%C3%B1os%20700ml%20(S%2F%2085.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-vodka" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Vodka</h3><span>Para cócteles y mezclas</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M24,4h12v14l6,6v58c0,4-3,6-6,6H24c-3,0-6-2-6-6V24l6-6Z" fill="none" stroke="#D9D0BC" stroke-width="2.4"/></svg>
+          <p class="p-nombre">Absolut 750ml</p>
+          <p class="p-precio">S/ 45.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Absolut%20750ml%20(S%2F%2045.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-piscos" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Piscos</h3><span>Tradición peruana</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M24,4h12v16l8,10v52c0,4-3,8-8,8H24c-5,0-8-4-8-8V30l8-10Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><path d="M16,52h28v20c0,4-3,8-8,8H24c-5,0-8-4-8-8Z" fill="#6B1E23" opacity="0.5"/></svg>
+          <p class="p-nombre">Queirolo Quebranta 750ml</p>
+          <p class="p-precio">S/ 28.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Pisco%20Queirolo%20Quebranta%20750ml%20(S%2F%2028.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M24,4h12v16l8,10v52c0,4-3,8-8,8H24c-5,0-8-4-8-8V30l8-10Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><path d="M16,52h28v20c0,4-3,8-8,8H24c-5,0-8-4-8-8Z" fill="#6B1E23" opacity="0.5"/></svg>
+          <p class="p-nombre">Queirolo Acholado 750ml</p>
+          <p class="p-precio">S/ 27.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Pisco%20Queirolo%20Acholado%20750ml%20(S%2F%2027.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-vinos" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Vinos</h3><span>Nacionales</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#6B1E23" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#6B1E23" opacity="0.5"/></svg>
+          <p class="p-nombre">Tabernero Borgoña 750ml</p>
+          <p class="p-precio">S/ 17.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vino%20Tabernero%20Borgo%C3%B1a%20750ml%20(S%2F%2017.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-cervezas" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Cervezas</h3><span>Six packs</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
+          <p class="p-nombre">Cusqueña Dorada Six Pack 310ml</p>
+          <p class="p-precio">S/ 30.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Cusque%C3%B1a%20Dorada%20Six%20Pack%20310ml%20(S%2F%2030.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
+          <p class="p-nombre">Corona Six Pack 355ml</p>
+          <p class="p-precio">S/ 34.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Corona%20Six%20Pack%20355ml%20(S%2F%2034.00)" target="_blank">Pedir</a>
+        </div>
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M20,10h20v10l4,4v56c0,4-3,6-6,6H22c-3,0-6-2-6-6V24l4-4Z" fill="none" stroke="#E3B04B" stroke-width="2.4"/><rect x="16" y="40" width="28" height="30" fill="#E3B04B" opacity="0.45"/></svg>
+          <p class="p-nombre">Heineken Six Pack 330ml</p>
+          <p class="p-precio">S/ 30.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Heineken%20Six%20Pack%20330ml%20(S%2F%2030.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="cat-grupo" id="g-cremas" data-reveal>
+      <div class="cat-grupo-titulo"><h3>Licor de crema</h3><span>Para disfrutar solo o en postres</span></div>
+      <div class="producto-grid">
+        <div class="producto-card">
+          <svg viewBox="0 0 60 90"><path d="M22,4h16v18c0,4 10,8 10,20v40c0,4-4,6-8,6H20c-4,0-8-2-8-6V42c0-12 10-16 10-20Z" fill="none" stroke="#F0E6D2" stroke-width="2.4"/><rect x="18" y="52" width="24" height="24" fill="#F0E6D2" opacity="0.4"/></svg>
+          <p class="p-nombre">Baileys Original 750ml</p>
+          <p class="p-precio">S/ 65.00</p>
+          <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Baileys%20Original%20750ml%20(S%2F%2065.00)" target="_blank">Pedir</a>
+        </div>
+      </div>
+    </div>
+
+    <p class="precios-nota">Precios referenciales de mercado, sujetos a variación. Consulta stock disponible por WhatsApp.</p>
+  </div>
+</section>
+
+<section id="historia">
+  <div class="wrap">
+    <div class="historia">
+      <div class="marco" data-reveal>
+        <blockquote>"El buen trago no se apura. Se sirve, se comparte, y se disfruta hasta la última gota."</blockquote>
+        <cite>— Filosofía de la casa</cite>
+      </div>
+      <div data-reveal>
+        <p class="eyebrow">Nuestra historia</p>
+        <h2 style="margin:14px 0 22px;">Una licorería de barrio, con alma de bodega</h2>
+        <p>La Última Gota nació de una idea simple: que comprar una buena botella se sienta como recibir una recomendación de un amigo, no como hacer un trámite.</p>
+        <p>Seleccionamos cada etiqueta pensando en el momento en que se va a abrir: una cena, una celebración, una tarde tranquila. Por eso cuidamos el origen, la conservación y el precio justo de cada botella que sale de nuestra puerta.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="visitanos">
+  <div class="wrap">
+    <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
+    <div class="titulo-seccion" data-reveal>
+      <p class="eyebrow">Información</p>
+      <h2>Visítanos</h2>
+    </div>
+    <div class="info-grid" data-reveal>
+      <div class="info-card">
+        <span class="eyebrow">Horario</span>
+        <p><b>Lunes a sábado</b><br>11:00 a.m. – 11:00 p.m.</p>
+        <p style="margin-top:10px;"><b>Domingo</b><br>12:00 p.m. – 9:00 p.m.</p>
+      </div>
+      <div class="info-card">
+        <span class="eyebrow">Ubicación</span>
+        <p>Lima, Perú<br>Actualizaremos la dirección exacta muy pronto.</p>
+        <a class="mini-btn" href="https://maps.google.com/?q=Lima,Peru" target="_blank">Cómo llegar →</a>
+      </div>
+      <div class="info-card">
+        <span class="eyebrow">Pedidos</span>
+        <p>Delivery y encargos por WhatsApp.<br><b>901 983 603</b></p>
+        <a class="mini-btn" href="https://wa.me/51901983603" target="_blank">Escribir ahora →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="cols">
+      <div class="col">
+        <h5>La Última Gota</h5>
+        <p style="max-width:280px; line-height:1.8;">Licorería en Lima, Perú. Piscos, vinos, whiskies y cervezas seleccionados con cuidado, con delivery el mismo día.</p>
+      </div>
+      <div class="col">
+        <h5>Navegación</h5>
+        <a href="#ofertas">Ofertas</a>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#historia">Historia</a>
+        <a href="#visitanos">Visítanos</a>
+      </div>
+      <div class="col">
+        <h5>Contacto</h5>
+        <a href="https://wa.me/51901983603" target="_blank">WhatsApp: 901 983 603</a>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+      </div>
+    </div>
+    <div class="bottom">
+      <div class="marca">
+        <img src="logo-la-ultima-gota.png" alt="La Última Gota">
+      </div>
+      <div class="legal">© 2026 La Última Gota — Venta solo a mayores de 18 años. Tomar bebidas alcohólicas en exceso es dañino.</div>
+    </div>
+  </div>
+</footer>
+
+<a class="wa-flotante" href="https://wa.me/51901983603" target="_blank" aria-label="Escribir por WhatsApp">
+  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.5C8.5 21.5 10.2 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm5.6 14.3c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.8 2 .9 2.1.1.2.1.4 0 .6-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.7-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.7-.1.3.1 1.7.8 2 1 .3.1.5.2.6.3.1.2.1.9-.1 1.5z"/></svg>
+</a>
+
+<script>
+  // menú móvil
+  const btnMenu = document.getElementById('btnMenu');
+  const navMenu = document.getElementById('navMenu');
+  btnMenu.addEventListener('click', () => {
+    btnMenu.classList.toggle('abierto');
+    navMenu.classList.toggle('abierto');
+  });
+  navMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    btnMenu.classList.remove('abierto');
+    navMenu.classList.remove('abierto');
+  }));
+
+  // animación al hacer scroll
+  const reveals = document.querySelectorAll('[data-reveal]');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
