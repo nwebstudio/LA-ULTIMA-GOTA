@@ -161,25 +161,6 @@
   .titulo-seccion h2{font-size:clamp(30px,4vw,44px); margin-top:14px;}
   .titulo-seccion p{color:var(--cobre); margin-top:14px; max-width:520px; margin-left:auto; margin-right:auto; font-size:15px;}
 
-  /* ofertas */
-  .ofertas{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
-  .oferta-card{
-    position:relative; border:1px solid var(--linea); padding:34px 28px 30px;
-    background:linear-gradient(160deg, rgba(107,30,35,0.14), var(--negro-2));
-    transition:border-color .3s, transform .3s;
-  }
-  .oferta-card:hover{border-color:var(--oro); transform:translateY(-4px);}
-  .oferta-tag{
-    position:absolute; top:-14px; right:24px;
-    background:var(--oro); color:var(--negro); font-family:'IBM Plex Mono', monospace;
-    font-size:11px; font-weight:500; letter-spacing:1.5px; padding:6px 12px; border-radius:2px;
-  }
-  .oferta-card h3{font-size:21px; color:var(--crema); margin-bottom:10px; padding-right:40px;}
-  .oferta-card p.desc{font-size:13.5px; color:rgba(240,230,210,0.65); line-height:1.6; margin-bottom:20px;}
-  .oferta-precio{display:flex; align-items:baseline; gap:8px;}
-  .oferta-precio .s{font-family:'IBM Plex Mono', monospace; font-size:14px; color:var(--oro);}
-  .oferta-precio .monto{font-family:'Fraunces', serif; font-size:36px; color:var(--oro-claro); font-weight:600;}
-
   /* franja de marcas */
   .marcas-strip{
     border-top:1px solid var(--linea); border-bottom:1px solid var(--linea);
@@ -302,7 +283,6 @@
     .hero .wrap, .historia{grid-template-columns:1fr;}
     .confianza .wrap{grid-template-columns:1fr; gap:14px; padding:22px;}
     .confianza-item{justify-content:flex-start;}
-    .ofertas{grid-template-columns:1fr;}
     .combos-grid{grid-template-columns:repeat(2,1fr);}
     footer .cols{grid-template-columns:1fr; gap:28px;}
     .info-grid{grid-template-columns:1fr;}
@@ -314,11 +294,10 @@
 
 <header>
   <div class="marca">
-    <img src="logo-la-ultima-gota.png" alt="La Última Gota">
+    <span class="gota" style="margin:0 8px 0 0;"></span>La <b>Última</b> Gota
   </div>
   <button class="hamburguesa" id="btnMenu" aria-label="Abrir menú"><span></span><span></span><span></span></button>
   <nav id="navMenu">
-    <a href="#ofertas">Ofertas</a>
     <a href="#catalogo">Catálogo</a>
     <a href="#historia">Historia</a>
     <a href="#visitanos">Delivery</a>
@@ -382,37 +361,6 @@
     </div>
   </div>
 </div>
-
-<section id="ofertas">
-  <div class="wrap">
-    <div class="divisor" data-reveal="fade"><div class="linea"></div><span class="gota"></span><div class="linea"></div></div>
-    <div class="titulo-seccion" data-reveal>
-      <p class="eyebrow">Este mes</p>
-      <h2>Ofertas destacadas</h2>
-      <p>Combos pensados para compartir, con precio especial por tiempo limitado.</p>
-    </div>
-    <div class="ofertas">
-      <div class="oferta-card" data-reveal>
-        <span class="oferta-tag">Oferta</span>
-        <h3>Combo Ron + Gaseosa + Hielo</h3>
-        <p class="desc">Ron añejo, gaseosa de 3L y bolsa de hielo de 15kg. Todo listo para la reunión.</p>
-        <div class="oferta-precio"><span class="s">S/</span><span class="monto">60</span></div>
-      </div>
-      <div class="oferta-card" data-reveal>
-        <span class="oferta-tag">Oferta</span>
-        <h3>Pack Cervezas Artesanales x6</h3>
-        <p class="desc">Selección mixta de cervezas artesanales locales, siempre frías al recogerlas.</p>
-        <div class="oferta-precio"><span class="s">S/</span><span class="monto">45</span></div>
-      </div>
-      <div class="oferta-card" data-reveal>
-        <span class="oferta-tag">Oferta</span>
-        <h3>Pisco + Limón + Ice</h3>
-        <p class="desc">Pisco quebranta, limones frescos y hielo. Lo esencial para un buen pisco sour.</p>
-        <div class="oferta-precio"><span class="s">S/</span><span class="monto">50</span></div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <div class="marcas-strip">
   <div class="marcas-track">
@@ -519,6 +467,38 @@
             <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Mike's%20Hard%20Strawberry%20Lemonade%20(S%2F%2035.00)" target="_blank">Pedir</a>
           </div>
         </div>
+        <div class="combo-card">
+          <div class="foto"><img src="producto-lucky-strike-wildmix.jpg" alt="Cigarros Lucky Strike Wild Mix cajetilla 20 unidades"></div>
+          <div class="info">
+            <p class="c-nombre">Lucky Strike Wild Mix Cajetilla 20un</p>
+            <p class="c-precio">S/ 17.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Lucky%20Strike%20Wild%20Mix%20Cajetilla%2020un%20(S%2F%2017.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="producto-lucky-strike-doubleclick.jpg" alt="Cigarros Lucky Strike Double Click 1871 Wild cajetilla 20 unidades"></div>
+          <div class="info">
+            <p class="c-nombre">Lucky Strike Double Click 1871 Wild 20un</p>
+            <p class="c-precio">S/ 18.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Lucky%20Strike%20Double%20Click%201871%20Wild%2020un%20(S%2F%2018.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="producto-vina-vieja-borgona.jpg" alt="Vino Viña Vieja Gran Borgoña Semi Seco 750ml"></div>
+          <div class="info">
+            <p class="c-nombre">Viña Vieja Gran Borgoña Semi Seco 750ml</p>
+            <p class="c-precio">S/ 14.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vi%C3%B1a%20Vieja%20Gran%20Borgo%C3%B1a%20Semi%20Seco%20750ml%20(S%2F%2014.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
+        <div class="combo-card">
+          <div class="foto"><img src="producto-vina-vieja-rose.jpg" alt="Vino Viña Vieja Gran Rosé Semi Seco 750ml"></div>
+          <div class="info">
+            <p class="c-nombre">Viña Vieja Gran Rosé Semi Seco 750ml</p>
+            <p class="c-precio">S/ 14.00</p>
+            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vi%C3%B1a%20Vieja%20Gran%20Ros%C3%A9%20Semi%20Seco%20750ml%20(S%2F%2014.00)" target="_blank">Pedir</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -579,8 +559,7 @@
       </div>
       <div class="col">
         <h5>Navegación</h5>
-        <a href="#ofertas">Ofertas</a>
-        <a href="#catalogo">Catálogo</a>
+            <a href="#catalogo">Catálogo</a>
         <a href="#historia">Historia</a>
         <a href="#visitanos">Delivery</a>
       </div>
@@ -593,7 +572,7 @@
     </div>
     <div class="bottom">
       <div class="marca">
-        <img src="logo-la-ultima-gota.png" alt="La Última Gota">
+        <span class="gota" style="margin:0 8px 0 0;"></span>La <b>Última</b> Gota
       </div>
       <div class="legal">© 2026 La Última Gota — Venta solo a mayores de 18 años. Tomar bebidas alcohólicas en exceso es dañino.</div>
     </div>
