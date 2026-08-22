@@ -188,12 +188,79 @@
   .combo-card .c-precio{font-family:'IBM Plex Mono', monospace; font-size:17px; color:var(--oro-claro); font-weight:500; margin-bottom:14px;}
 
   .p-pedir{
-    margin-top:auto; display:block; text-align:center;
+    margin-top:0; display:block; text-align:center; cursor:pointer;
     font-size:10.5px; letter-spacing:1.5px; text-transform:uppercase; color:var(--oro);
     border:1px solid var(--oro); padding:10px 14px; border-radius:2px; width:100%;
-    transition:background .25s, color .25s; box-sizing:border-box;
+    transition:background .25s, color .25s; box-sizing:border-box; background:none;
+    font-family:'Work Sans', sans-serif;
   }
   .p-pedir:hover{background:var(--oro); color:var(--negro);}
+  .p-pedir.agregado{background:var(--oro-claro); color:var(--negro); border-color:var(--oro-claro);}
+
+  .qty-row{
+    margin-top:auto; display:flex; align-items:center; justify-content:center; gap:14px;
+    margin-bottom:10px;
+  }
+  .qty-btn{
+    width:28px; height:28px; border:1px solid var(--linea); background:none; color:var(--crema);
+    border-radius:2px; font-size:15px; cursor:pointer; transition:border-color .2s, color .2s;
+    font-family:'IBM Plex Mono', monospace;
+  }
+  .qty-btn:hover{border-color:var(--oro); color:var(--oro-claro);}
+  .qty-val{font-family:'IBM Plex Mono', monospace; font-size:14px; min-width:16px; text-align:center;}
+
+  /* carrito flotante */
+  .carrito-flotante{
+    position:fixed; bottom:26px; right:96px; z-index:80;
+    width:58px; height:58px; border-radius:50%;
+    background:var(--negro-2); border:1px solid var(--oro); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.55); cursor:pointer;
+    transition:transform .25s;
+  }
+  .carrito-flotante:hover{transform:scale(1.08);}
+  .carrito-flotante svg{width:24px; height:24px; color:var(--oro-claro);}
+  .carrito-badge{
+    position:absolute; top:-4px; right:-4px; background:var(--vino); color:var(--crema);
+    font-family:'IBM Plex Mono', monospace; font-size:11px; min-width:20px; height:20px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center; padding:0 4px;
+  }
+
+  /* panel del carrito */
+  .carrito-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:90; opacity:0; pointer-events:none;
+    transition:opacity .3s;
+  }
+  .carrito-overlay.abierto{opacity:1; pointer-events:auto;}
+  .carrito-panel{
+    position:fixed; top:0; right:0; height:100vh; width:min(90vw, 400px); z-index:95;
+    background:var(--negro-2); border-left:1px solid var(--linea);
+    transform:translateX(100%); transition:transform .35s ease;
+    display:flex; flex-direction:column; padding:28px 24px;
+    box-shadow:-10px 0 40px rgba(0,0,0,0.5);
+  }
+  .carrito-panel.abierto{transform:translateX(0);}
+  .carrito-panel h3{font-size:22px; color:var(--oro-claro); margin-bottom:6px;}
+  .carrito-cerrar{
+    position:absolute; top:24px; right:24px; background:none; border:none; color:var(--crema);
+    font-size:22px; cursor:pointer; line-height:1;
+  }
+  .carrito-items{flex:1; overflow-y:auto; margin-top:24px; display:flex; flex-direction:column; gap:16px;}
+  .carrito-vacio{color:var(--cobre); font-size:13.5px; text-align:center; margin-top:40px;}
+  .carrito-item{border-bottom:1px solid var(--linea); padding-bottom:14px;}
+  .carrito-item .ci-nombre{font-size:13.5px; color:var(--crema); margin-bottom:8px; line-height:1.4;}
+  .carrito-item .ci-fila{display:flex; align-items:center; justify-content:space-between;}
+  .carrito-item .ci-precio{font-family:'IBM Plex Mono', monospace; color:var(--oro-claro); font-size:13.5px;}
+  .carrito-item .ci-quitar{background:none; border:none; color:var(--cobre); font-size:11px; letter-spacing:1px; text-transform:uppercase; cursor:pointer; text-decoration:underline;}
+  .carrito-total{border-top:1px solid var(--linea); padding-top:18px; margin-top:10px;}
+  .carrito-total .ct-fila{display:flex; justify-content:space-between; font-family:'IBM Plex Mono', monospace; font-size:15px; color:var(--crema); margin-bottom:16px;}
+  .carrito-total .ct-fila b{color:var(--oro-claro); font-size:19px;}
+  .carrito-enviar{
+    display:block; text-align:center; background:var(--oro); color:var(--negro); font-weight:500;
+    padding:15px; border-radius:2px; font-size:13px; letter-spacing:1.5px; text-transform:uppercase;
+    transition:background .25s;
+  }
+  .carrito-enviar:hover{background:var(--oro-claro);}
+  .carrito-enviar.deshabilitado{opacity:0.4; pointer-events:none;}
 
   /* titulo de grupo dentro del catalogo */
   .cat-grupo{margin-bottom:64px;}
@@ -301,7 +368,7 @@
     <a href="#catalogo">Catálogo</a>
     <a href="#historia">Historia</a>
     <a href="#visitanos">Delivery</a>
-    <a href="https://wa.me/51901983603" target="_blank" class="nav-cta">Pedir ahora</a>
+    <a href="https://wa.me/51903019602" target="_blank" class="nav-cta">Pedir ahora</a>
   </nav>
 </header>
 
@@ -312,7 +379,7 @@
       <h1>Cada botella<br>guarda <em>una</em><br>última gota.</h1>
       <p class="lead">Piscos, vinos, whiskies y cervezas artesanales seleccionados con cuidado. Un lugar donde cada etiqueta tiene una historia que contar antes de llegar a tu mesa.</p>
       <div class="cta-row">
-        <a href="https://wa.me/51901983603" target="_blank" class="btn solid">Pedir por WhatsApp</a>
+        <a href="https://wa.me/51903019602" target="_blank" class="btn solid">Pedir por WhatsApp</a>
         <a href="#catalogo" class="btn ghost">Ver catálogo</a>
       </div>
     </div>
@@ -392,7 +459,7 @@
           <div class="info">
             <p class="c-nombre">Combo Johnnie Walker Red Label + Hielo + Evervess</p>
             <p class="c-precio">S/ 90.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Johnnie%20Walker%20Red%20Label%20%2B%20Hielo%20%2B%20Evervess%20(S%2F%2090.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Johnnie Walker Red Label + Hielo + Evervess" data-precio="90.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -400,7 +467,7 @@
           <div class="info">
             <p class="c-nombre">Combo Chivas Regal 12 Años + Hielo + Evervess</p>
             <p class="c-precio">S/ 176.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Chivas%20Regal%2012%20A%C3%B1os%20%2B%20Hielo%20%2B%20Evervess%20(S%2F%20176.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Chivas Regal 12 Años + Hielo + Evervess" data-precio="176.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -408,7 +475,7 @@
           <div class="info">
             <p class="c-nombre">Combo Ron Cartavio Black + Hielo + Coca-Cola</p>
             <p class="c-precio">S/ 62.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Ron%20Cartavio%20Black%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2062.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Ron Cartavio Black + Hielo + Coca-Cola" data-precio="62.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -416,7 +483,7 @@
           <div class="info">
             <p class="c-nombre">Combo Flor de Caña Oro Reserva + Hielo + Coca-Cola</p>
             <p class="c-precio">S/ 94.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Flor%20de%20Ca%C3%B1a%20Oro%20Reserva%20%2B%20Hielo%20%2B%20Coca-Cola%20(S%2F%2094.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Flor de Caña Oro Reserva + Hielo + Coca-Cola" data-precio="94.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -424,7 +491,7 @@
           <div class="info">
             <p class="c-nombre">Combo Smirnoff Green Apple + Hielo + Evervess</p>
             <p class="c-precio">S/ 74.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Smirnoff%20Green%20Apple%20%2B%20Hielo%20%2B%20Evervess%20(S%2F%2074.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Smirnoff Green Apple + Hielo + Evervess" data-precio="74.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -432,7 +499,7 @@
           <div class="info">
             <p class="c-nombre">Combo Pisco Queirolo Acholado + Hielo + Evervess</p>
             <p class="c-precio">S/ 62.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20el%20combo%20Pisco%20Queirolo%20Acholado%20%2B%20Hielo%20%2B%20Evervess%20(S%2F%2062.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Combo Pisco Queirolo Acholado + Hielo + Evervess" data-precio="62.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -440,7 +507,7 @@
           <div class="info">
             <p class="c-nombre">Vino Tabernero Gran Rosé Afrutado 750ml</p>
             <p class="c-precio">S/ 20.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vino%20Tabernero%20Gran%20Ros%C3%A9%20Afrutado%20750ml%20(S%2F%2020.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Vino Tabernero Gran Rosé Afrutado 750ml" data-precio="20.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -448,7 +515,7 @@
           <div class="info">
             <p class="c-nombre">Six Pack Pilsen Callao Lata 269ml</p>
             <p class="c-precio">S/ 22.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Pilsen%20Callao%20269ml%20(S%2F%2022.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Six Pack Pilsen Callao Lata 269ml" data-precio="22.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -456,7 +523,7 @@
           <div class="info">
             <p class="c-nombre">Six Pack Mike's Mango Hot (Edición Limitada)</p>
             <p class="c-precio">S/ 35.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Mike's%20Mango%20Hot%20(S%2F%2035.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Six Pack Mike's Mango Hot (Edición Limitada)" data-precio="35.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -464,7 +531,7 @@
           <div class="info">
             <p class="c-nombre">Six Pack Mike's Hard Strawberry Lemonade</p>
             <p class="c-precio">S/ 35.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Six%20Pack%20Mike's%20Hard%20Strawberry%20Lemonade%20(S%2F%2035.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Six Pack Mike's Hard Strawberry Lemonade" data-precio="35.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -472,7 +539,7 @@
           <div class="info">
             <p class="c-nombre">Lucky Strike Wild Mix Cajetilla 20un</p>
             <p class="c-precio">S/ 17.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Lucky%20Strike%20Wild%20Mix%20Cajetilla%2020un%20(S%2F%2017.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Lucky Strike Wild Mix Cajetilla 20un" data-precio="17.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -480,7 +547,7 @@
           <div class="info">
             <p class="c-nombre">Lucky Strike Double Click 1871 Wild 20un</p>
             <p class="c-precio">S/ 18.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Lucky%20Strike%20Double%20Click%201871%20Wild%2020un%20(S%2F%2018.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Lucky Strike Double Click 1871 Wild 20un" data-precio="18.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -488,7 +555,7 @@
           <div class="info">
             <p class="c-nombre">Viña Vieja Gran Borgoña Semi Seco 750ml</p>
             <p class="c-precio">S/ 14.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vi%C3%B1a%20Vieja%20Gran%20Borgo%C3%B1a%20Semi%20Seco%20750ml%20(S%2F%2014.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Viña Vieja Gran Borgoña Semi Seco 750ml" data-precio="14.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
         <div class="combo-card">
@@ -496,7 +563,7 @@
           <div class="info">
             <p class="c-nombre">Viña Vieja Gran Rosé Semi Seco 750ml</p>
             <p class="c-precio">S/ 14.00</p>
-            <a class="p-pedir" href="https://wa.me/51901983603?text=Hola%2C%20quiero%20pedir%20Vi%C3%B1a%20Vieja%20Gran%20Ros%C3%A9%20Semi%20Seco%20750ml%20(S%2F%2014.00)" target="_blank">Pedir</a>
+            <div class="qty-row"><button class="qty-btn" onclick="cambiarCantidad(this,-1)">-</button><span class="qty-val">1</span><button class="qty-btn" onclick="cambiarCantidad(this,1)">+</button></div><button class="p-pedir" data-nombre="Viña Vieja Gran Rosé Semi Seco 750ml" data-precio="14.00" onclick="agregarAlCarrito(this)">Agregar al carrito</button>
           </div>
         </div>
       </div>
@@ -543,8 +610,8 @@
       </div>
       <div class="info-card">
         <span class="eyebrow">Pedidos</span>
-        <p>Escríbenos y armamos tu pedido.<br><b>901 983 603</b></p>
-        <a class="mini-btn" href="https://wa.me/51901983603" target="_blank">Escribir ahora →</a>
+        <p>Escríbenos y armamos tu pedido.<br><b>903 019 602</b></p>
+        <a class="mini-btn" href="https://wa.me/51903019602" target="_blank">Escribir ahora →</a>
       </div>
     </div>
   </div>
@@ -565,7 +632,7 @@
       </div>
       <div class="col">
         <h5>Contacto</h5>
-        <a href="https://wa.me/51901983603" target="_blank">WhatsApp: 901 983 603</a>
+        <a href="https://wa.me/51903019602" target="_blank">WhatsApp: 903 019 602</a>
         <a href="#">Instagram</a>
         <a href="#">Facebook</a>
       </div>
@@ -579,9 +646,28 @@
   </div>
 </footer>
 
-<a class="wa-flotante" href="https://wa.me/51901983603" target="_blank" aria-label="Escribir por WhatsApp">
+<a class="wa-flotante" href="https://wa.me/51903019602" target="_blank" aria-label="Escribir por WhatsApp">
   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12c0 1.9.5 3.6 1.5 5.2L2 22l4.9-1.5C8.5 21.5 10.2 22 12 22c5.5 0 10-4.5 10-10S17.5 2 12 2zm5.6 14.3c-.2.6-1.3 1.2-1.9 1.3-.5.1-1.1.1-1.8-.1-.4-.1-1-.3-1.7-.6-3-1.3-4.9-4.3-5-4.5-.1-.2-1.2-1.6-1.2-3.1s.8-2.2 1.1-2.5c.3-.3.6-.4.8-.4h.6c.2 0 .4 0 .6.5.2.6.8 2 .9 2.1.1.2.1.4 0 .6-.1.2-.1.3-.3.5l-.4.5c-.1.2-.3.3-.1.6.2.3.8 1.3 1.7 2.1 1.2 1 2.1 1.4 2.4 1.5.3.1.5.1.7-.1.2-.2.7-.8.9-1.1.2-.3.4-.2.7-.1.3.1 1.7.8 2 1 .3.1.5.2.6.3.1.2.1.9-.1 1.5z"/></svg>
 </a>
+
+<div class="carrito-flotante" id="btnCarrito" aria-label="Ver carrito">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1.4" fill="currentColor" stroke="none"/><circle cx="18" cy="21" r="1.4" fill="currentColor" stroke="none"/><path d="M2 3h2l2.6 12.4a2 2 0 0 0 2 1.6h8.8a2 2 0 0 0 2-1.6L21 7H6"/></svg>
+  <span class="carrito-badge" id="carritoBadge" style="display:none;">0</span>
+</div>
+
+<div class="carrito-overlay" id="carritoOverlay"></div>
+<div class="carrito-panel" id="carritoPanel">
+  <button class="carrito-cerrar" id="carritoCerrar" aria-label="Cerrar carrito">&times;</button>
+  <h3>Tu pedido</h3>
+  <p class="eyebrow" style="margin:0;">La Última Gota</p>
+  <div class="carrito-items" id="carritoItems">
+    <p class="carrito-vacio">Todavía no agregaste productos.</p>
+  </div>
+  <div class="carrito-total">
+    <div class="ct-fila"><span>Total</span><b id="carritoTotal">S/ 0.00</b></div>
+    <a class="carrito-enviar deshabilitado" id="carritoEnviar" href="#" target="_blank">Enviar pedido por WhatsApp</a>
+  </div>
+</div>
 
 <script>
   // menú móvil
@@ -607,6 +693,114 @@
     });
   }, { threshold: 0.15 });
   reveals.forEach(el => observer.observe(el));
+
+  // ===== Carrito de compras =====
+  const NUMERO_WHATSAPP = '51903019602';
+  let carrito = [];
+  try {
+    const guardado = localStorage.getItem('carrito-la-ultima-gota');
+    if (guardado) carrito = JSON.parse(guardado);
+  } catch (e) { carrito = []; }
+
+  function guardarCarrito(){
+    try { localStorage.setItem('carrito-la-ultima-gota', JSON.stringify(carrito)); } catch(e){}
+  }
+
+  function cambiarCantidad(btn, delta){
+    const fila = btn.closest('.qty-row');
+    const span = fila.querySelector('.qty-val');
+    let val = parseInt(span.textContent) + delta;
+    if (val < 1) val = 1;
+    span.textContent = val;
+  }
+
+  function agregarAlCarrito(btn){
+    const nombre = btn.dataset.nombre;
+    const precio = parseFloat(btn.dataset.precio);
+    const fila = btn.parentElement.querySelector('.qty-row');
+    const cantidad = parseInt(fila.querySelector('.qty-val').textContent);
+
+    const existente = carrito.find(i => i.nombre === nombre);
+    if (existente) {
+      existente.cantidad += cantidad;
+    } else {
+      carrito.push({ nombre, precio, cantidad });
+    }
+    guardarCarrito();
+    renderCarrito();
+
+    // feedback visual en el botón
+    const textoOriginal = btn.textContent;
+    btn.textContent = 'Agregado ✓';
+    btn.classList.add('agregado');
+    setTimeout(() => { btn.textContent = textoOriginal; btn.classList.remove('agregado'); }, 1200);
+  }
+
+  function quitarDelCarrito(idx){
+    carrito.splice(idx, 1);
+    guardarCarrito();
+    renderCarrito();
+  }
+
+  function renderCarrito(){
+    const cont = document.getElementById('carritoItems');
+    const badge = document.getElementById('carritoBadge');
+    const totalEl = document.getElementById('carritoTotal');
+    const enviarBtn = document.getElementById('carritoEnviar');
+
+    const totalItems = carrito.reduce((s,i) => s + i.cantidad, 0);
+    if (totalItems > 0) {
+      badge.style.display = 'flex';
+      badge.textContent = totalItems;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (carrito.length === 0) {
+      cont.innerHTML = '<p class="carrito-vacio">Todavía no agregaste productos.</p>';
+      enviarBtn.classList.add('deshabilitado');
+    } else {
+      cont.innerHTML = carrito.map((item, idx) => `
+        <div class="carrito-item">
+          <p class="ci-nombre">${item.nombre}</p>
+          <div class="ci-fila">
+            <span class="ci-precio">${item.cantidad} × S/ ${item.precio.toFixed(2)}</span>
+            <button class="ci-quitar" onclick="quitarDelCarrito(${idx})">Quitar</button>
+          </div>
+        </div>
+      `).join('');
+      enviarBtn.classList.remove('deshabilitado');
+    }
+
+    const total = carrito.reduce((s,i) => s + i.precio * i.cantidad, 0);
+    totalEl.textContent = 'S/ ' + total.toFixed(2);
+
+    let mensaje = 'Hola, quiero hacer este pedido:%0A%0A';
+    carrito.forEach(item => {
+      mensaje += `• ${item.cantidad} x ${item.nombre} (S/ ${(item.precio*item.cantidad).toFixed(2)})%0A`;
+    });
+    mensaje += `%0ATotal: S/ ${total.toFixed(2)}`;
+    enviarBtn.href = `https://wa.me/${NUMERO_WHATSAPP}?text=${mensaje}`;
+  }
+
+  const btnCarrito = document.getElementById('btnCarrito');
+  const carritoPanel = document.getElementById('carritoPanel');
+  const carritoOverlay = document.getElementById('carritoOverlay');
+  const carritoCerrar = document.getElementById('carritoCerrar');
+
+  function abrirCarrito(){
+    carritoPanel.classList.add('abierto');
+    carritoOverlay.classList.add('abierto');
+  }
+  function cerrarCarrito(){
+    carritoPanel.classList.remove('abierto');
+    carritoOverlay.classList.remove('abierto');
+  }
+  btnCarrito.addEventListener('click', abrirCarrito);
+  carritoCerrar.addEventListener('click', cerrarCarrito);
+  carritoOverlay.addEventListener('click', cerrarCarrito);
+
+  renderCarrito();
 </script>
 
 </body>
